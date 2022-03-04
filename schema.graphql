@@ -1,0 +1,48 @@
+type Bucket @entity {
+  "bucket contract address"
+  id: ID!
+  creator: Account!
+  createTime: Int!
+  raffleDate: Int!
+  whiltelistNumber: Int!
+  ticketPrice: Int!
+  raffles: [AccountRaffle!]! @derivedFrom(field: "bucket")
+}
+
+type AccountRaffle @entity {
+  "user+bucket+raffleId"
+  id: ID!
+  amount: BigDecimal!
+  bucket: Bucket!
+}
+
+type IPPool @entity {
+  "IPPool contract address"
+  id: ID!
+  chainID: Int!
+  ips: [IPToken!]! @derivedFrom(field: "ippool")
+}
+
+type Weight @entity {
+  "IPPool + TOKEN + epoch"
+  id: ID!
+  weight: Int!
+  epoch: Int!
+}
+
+type IPToken @entity {
+  "IPPool + TOKEN + tokenID"
+  id: ID!
+  owner: Account!
+  ippool: IPPool!
+  authorizedTime: Int!
+  signature: Bytes!
+  weights: [Weight!] 
+}
+
+type Account @entity {
+  "user account address"
+  id: ID!
+  ips: [IPToken!] @derivedFrom(field: "owner")
+  raffles: [AccountRaffle!]! @derivedFrom(field: "bucket")
+}
