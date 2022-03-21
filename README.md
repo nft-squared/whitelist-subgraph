@@ -47,7 +47,7 @@ docker-compose up
     id
   	rounds(first:1){
       id
-			state
+	  state
       rnd
       tickets
       raffleTime
