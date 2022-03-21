@@ -1,48 +1,97 @@
-type Bucket @entity {
-  "bucket contract address"
-  id: ID!
-  creator: Account!
-  createTime: Int!
-  raffleDate: Int!
-  whiltelistNumber: Int!
-  ticketPrice: Int!
-  raffles: [AccountRaffle!]! @derivedFrom(field: "bucket")
-}
-
-type AccountRaffle @entity {
-  "user+bucket+raffleId"
-  id: ID!
-  amount: BigDecimal!
-  bucket: Bucket!
-}
-
-type IPPool @entity {
-  "IPPool contract address"
-  id: ID!
-  chainID: Int!
-  ips: [IPToken!]! @derivedFrom(field: "ippool")
-}
-
-type Weight @entity {
-  "IPPool + TOKEN + epoch"
-  id: ID!
-  weight: Int!
-  epoch: Int!
-}
-
-type IPToken @entity {
-  "IPPool + TOKEN + tokenID"
-  id: ID!
-  owner: Account!
-  ippool: IPPool!
-  authorizedTime: Int!
-  signature: Bytes!
-  weights: [Weight!] 
-}
-
 type Account @entity {
-  "user account address"
-  id: ID!
-  ips: [IPToken!] @derivedFrom(field: "owner")
-  raffles: [AccountRaffle!]! @derivedFrom(field: "bucket")
+    "user information"
+    id: ID!
+    address: String!
+    referenceCode: String!
+    isSpecialRefer: bool!
+    
+    auths: [Auth!] @derivedFrom(field: "account")
+    winners: [RoundWinner!] @derivedFrom(field: "winner")
+}
+
+type Auth @entity {
+    "user authorized tokens"
+    id: ID!
+    account: Account!
+    txHash: String!
+    tokenAddr: String!
+    tokenID: Int!
+}
+
+type Bucket @entity {
+    "bucket"
+    id: ID!
+    state: BucketState!
+    address: String!
+    txHash: String!
+    creator: Account!
+
+    uri: String!
+    name: String!
+    description: String!
+    discord: String!
+    twitter: String!
+    website: String!
+    whitelistPerRound: Int!
+    numRounds: Int!
+    mintPrice: Int!
+    mintToken: String!
+    chain: String!
+    launchDate: Date!
+    referral: String
+
+    createTime: Int!
+    rounds: [BucketRound!] @derivedFrom(field: "bucket")
+}
+
+type BucketRound @entity {
+    "bucket rounds"
+    id: ID!
+    state: RoundState
+    bucket: Bucket!
+    round: Int!
+    tickets: Int!
+
+    raffleTime: Date
+    txHash: String
+    result: [RoundWinner!] @derivedFrom(field: "round")
+}
+
+type RoundWinner @entity {
+    "raffle result"
+    id: ID!
+    round: BucketRound!
+
+    winner: User!
+    numberWhitelist: Int!
+}
+
+enum BucketState {
+    "pending"
+    "active"
+    "closed"
+}
+
+enum RoundState {
+    "pending"
+    "done"
+}
+
+type Epoch @entity {
+    "weight for blue chip NFTs"
+    id: ID!
+    epoch: Int!
+    weights: [tokenWeights!]! @derivedFrom(field: "epoch")
+
+    currentTimestamp: Date
+    nextEpoch: Int
+    nextTimestamp: Date
+}
+
+type tokenWeight @entity {
+    "token weight for each epoch"
+    id: ID!
+    epoch: Epoch
+    tokenAddress: String!
+    weight: Int!
 }
