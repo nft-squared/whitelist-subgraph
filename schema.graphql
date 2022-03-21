@@ -3,7 +3,7 @@ type Account @entity {
     id: ID!
     address: String!
     referenceCode: String!
-    isSpecialRefer: bool!
+    isVIPRefer: bool!
     
     auths: [Auth!] @derivedFrom(field: "account")
     winners: [RoundWinner!] @derivedFrom(field: "winner")
@@ -78,20 +78,49 @@ enum RoundState {
 }
 
 type Epoch @entity {
-    "weight for blue chip NFTs"
+    "epoch information, including weights and timestamp"
     id: ID!
     epoch: Int!
-    weights: [tokenWeights!]! @derivedFrom(field: "epoch")
+    state: EpochState
+    weights: [TokenWeight!]! @derivedFrom(field: "epoch")
 
     currentTimestamp: Date
     nextEpoch: Int
     nextTimestamp: Date
 }
 
-type tokenWeight @entity {
+type TokenWeight @entity {
     "token weight for each epoch"
     id: ID!
     epoch: Epoch
     tokenAddress: String!
     weight: Int!
+}
+
+enum EpochState {
+    "active"
+    "transitioning"
+    "expired"
+}
+
+type System @entity {
+    "pricing and constant"
+    """
+    E.g. A new user added authorization worth 1000 tokens / day
+        If he does not have reference code, 
+            1. He will get (bonusBaseMulti / bonusDenom) * 1000 gold tickets
+        If he fill in a normal reference code, 
+            1. He will get (bonusBaseMulti + bonusReferMulti) / bonusDenom * 10000 gold tickets
+            2. His friend will get (bonusReferalMulti / bonusDenom) * 1000 gold tickets
+        If he fill in a VIP reference code,
+            1. He will get (bonusBaseMulti + bonusVIPMulti) / bonusDenom * 10000 gold tickets
+            2. VIP will get (bonusReferalMulti / bonusDenom) * 1000 gold tickets
+    """
+    bonusBaseMulti: Int!
+    bonusReferMulti: Int!
+    bonusVIPMulti: Int!
+    bonusReferalMulti: Int!
+    bonusDenom: Int!
+
+    bucketPrice: Float!
 }
