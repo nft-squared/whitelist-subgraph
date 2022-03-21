@@ -3,10 +3,10 @@ type Account @entity {
     id: ID!
     address: String!
     referenceCode: String!
-    isVIPRefer: bool!
+    isVIP: bool!
     
     auths: [Auth!] @derivedFrom(field: "account")
-    winners: [RoundWinner!] @derivedFrom(field: "winner")
+    whitelisted: [RoundWinner!] @derivedFrom(field: "winner")
 }
 
 type Auth @entity {
@@ -36,7 +36,7 @@ type Bucket @entity {
     numRounds: Int!
     mintPrice: Int!
     mintToken: String!
-    chain: String!
+    blockchain: String!
     launchDate: Date!
     referral: String
 
@@ -47,7 +47,7 @@ type Bucket @entity {
 type BucketRound @entity {
     "bucket rounds"
     id: ID!
-    state: RoundState
+    state: RoundState!
     bucket: Bucket!
     round: Int!
     tickets: Int!
@@ -62,7 +62,7 @@ type RoundWinner @entity {
     id: ID!
     round: BucketRound!
 
-    winner: User!
+    winner: Account!
     numberWhitelist: Int!
 }
 
@@ -84,9 +84,9 @@ type Epoch @entity {
     state: EpochState
     weights: [TokenWeight!]! @derivedFrom(field: "epoch")
 
-    currentTimestamp: Date
-    nextEpoch: Int
-    nextTimestamp: Date
+    startTimestamp: Date!
+    nextEpoch: Int!
+    nextTimestamp: Date!
 }
 
 type TokenWeight @entity {
@@ -108,12 +108,17 @@ type System @entity {
     """
     E.g. A new user added authorization worth 1000 tokens / day
         If he does not have reference code, 
+                            2000           / 1000
             1. He will get (bonusBaseMulti / bonusDenom) * 1000 gold tickets
         If he fill in a normal reference code, 
-            1. He will get (bonusBaseMulti + bonusReferMulti) / bonusDenom * 10000 gold tickets
+                            2000           + 1000             
+            1. He will get (bonusBaseMulti + bonusReferMulti) / bonusDenom * 1000 gold tickets
+                                    1000
             2. His friend will get (bonusReferalMulti / bonusDenom) * 1000 gold tickets
         If he fill in a VIP reference code,
-            1. He will get (bonusBaseMulti + bonusVIPMulti) / bonusDenom * 10000 gold tickets
+                            2000           + 1500
+            1. He will get (bonusBaseMulti + bonusVIPMulti) / bonusDenom * 1000 gold tickets
+                             1000
             2. VIP will get (bonusReferalMulti / bonusDenom) * 1000 gold tickets
     """
     bonusBaseMulti: Int!
