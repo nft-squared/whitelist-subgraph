@@ -8,7 +8,7 @@ dataSources:
     name: ElitePad
     network: mainnet
     source:
-      address: "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB"
+      address: "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B"
       abi: ElitePad
       startBlock: 0
     mapping:
@@ -16,7 +16,7 @@ dataSources:
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       entities:
-      - System        
+      - System
       abis:
         - name: ElitePad
           file: ./abis/ElitePad.sol/ElitePad.json

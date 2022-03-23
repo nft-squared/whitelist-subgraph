@@ -9,6 +9,7 @@ git checkout origin/fullTest -b fullTest
 ```
 2. install: `npm insall` or `yarn`
 3. start a local evm node: `yarn enode`
+3.1 remove typechain in gitignore
 4. deploy contracts and do some test: `yarn test --network develop test/FullLogic.test.ts`
 you'll see some logs like:
 ```
