@@ -5,13 +5,14 @@ import { Bucket as I_Bucket } from '../generated/templates'
 import { Create as E_Create } from '../generated/templates/BucketFactory/BucketFactory'
 
 
+//event Create(address creator, address bucket, uint256 startEpoch, uint256 round, uint256 numPerRound, string uri);
 export function handleCreate(event: E_Create): void {
     let bucket = new Bucket(event.params.bucket.toHex())
     bucket.state = "pending"
     bucket.txHash = event.transaction.hash
     bucket.creator = event.params.creator.toHex()
     bucket.uri = event.params.uri
-    bucket.name = "xxx"
+    bucket.name = "xx"
     bucket.description = "xxxx"
     bucket.discord = "xxxxx"
     bucket.twitter = "xxxxxx"
@@ -30,8 +31,7 @@ export function handleCreate(event: E_Create): void {
         round.round = i
         round.bucket = bucket.id
         round.state = "pending"
-        round.tickets = 0
-        round.searchLength = 0
+        round.tickets = event.params.numPerRound.toI32()
         round.save()
         bucket.rounds.push(round.id)
     }

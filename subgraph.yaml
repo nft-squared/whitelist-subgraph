@@ -8,23 +8,23 @@ dataSources:
     name: ElitePad
     network: mainnet
     source:
-      address: "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B"
+      address: "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"
       abi: ElitePad
       startBlock: 0
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
+      file: ./src/ElitePad.ts
       entities:
-      - System
+        - System
+        - User
       abis:
         - name: ElitePad
           file: ./abis/ElitePad.sol/ElitePad.json
       eventHandlers:
       - event: Initialize(address,address,address,address,address,address,address,address,address)
         handler: handleInitialize
-
-      file: ./src/ElitePad.ts
 
 templates:
   - name: BucketFactory
@@ -65,3 +65,25 @@ templates:
           handler: handleAddTickets
         - event: Raffle(address,uint256,uint256)
           handler: handleRaffle
+  - name: AuthPool
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: AuthPool
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/User.ts
+      entities:
+        - User
+      abis:
+        - name: AuthPool
+          file: ./abis/AuthPool.sol/AuthPool.json
+        - name: ElitePad
+          file: ./abis/ElitePad.sol/ElitePad.json
+      eventHandlers:
+        - event: AddAuth(address,uint256[],address)
+          handler: handleAddAuth
+        - event: DelAuth(address,uint256[])
+          handler: handleDelAuth
