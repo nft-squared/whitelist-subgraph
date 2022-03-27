@@ -1,5 +1,5 @@
 {
-  "name": "coco",
+  "name": "ElitePad",
   "license": "UNLICENSED",
   "scripts": {
     "all": "yarn codegen && yarn build && yarn create-local && yarn deploy-local",
@@ -7,10 +7,10 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "build-local": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ coco",
-    "create-local": "graph create --node http://localhost:8020/ coco",
-    "remove-local": "graph remove --node http://localhost:8020/ coco",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 coco"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ElitePad",
+    "create-local": "graph create --node http://localhost:8020/ ElitePad",
+    "remove-local": "graph remove --node http://localhost:8020/ ElitePad",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ElitePad"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.20.1",

@@ -1,10 +1,9 @@
+"https://thegraph.com/docs/en/developer/create-subgraph-hosted/"
 type Account @entity {
     "user information"
     id: ID!
-    address: String!
     referenceCode: String!
-    isVIP: bool!
-    
+    isVIP: Boolean!
     auths: [Auth!] @derivedFrom(field: "account")
     whitelisted: [RoundWinner!] @derivedFrom(field: "winner")
 }
@@ -22,10 +21,8 @@ type Bucket @entity {
     "bucket"
     id: ID!
     state: BucketState!
-    address: String!
-    txHash: String!
+    txHash: Bytes!
     creator: Account!
-
     uri: String!
     name: String!
     description: String!
@@ -37,23 +34,38 @@ type Bucket @entity {
     mintPrice: Int!
     mintToken: String!
     blockchain: String!
-    launchDate: Date!
+    launchDate: Int!
     referral: String
 
     createTime: Int!
     rounds: [BucketRound!] @derivedFrom(field: "bucket")
 }
 
+type SearchTicket @entity {
+    id: ID!
+    bucketRound: BucketRound!
+    user: Account!
+    accumulateTicktes: Int!
+}
+
+type UserRoundTicket @entity {
+    id: ID!
+    bucketRound: BucketRound!
+    amount: Int!
+}
+
 type BucketRound @entity {
     "bucket rounds"
     id: ID!
+    rnd: BigInt
     state: RoundState!
     bucket: Bucket!
     round: Int!
     tickets: Int!
-
-    raffleTime: Date
-    txHash: String
+    raffleTime: Int
+    searchLength: Int!
+    searchTickets: [SearchTicket!] @derivedFrom(field: "bucketRound")
+    userTickets: [UserRoundTicket!] @derivedFrom(field: "bucketRound")
     result: [RoundWinner!] @derivedFrom(field: "round")
 }
 
@@ -67,14 +79,14 @@ type RoundWinner @entity {
 }
 
 enum BucketState {
-    "pending"
-    "active"
-    "closed"
+    pending
+    active
+    closed
 }
 
 enum RoundState {
-    "pending"
-    "done"
+    pending
+    done
 }
 
 type Epoch @entity {
@@ -84,9 +96,9 @@ type Epoch @entity {
     state: EpochState
     weights: [TokenWeight!]! @derivedFrom(field: "epoch")
 
-    startTimestamp: Date!
+    startTimestamp: Int!
     nextEpoch: Int!
-    nextTimestamp: Date!
+    nextTimestamp: Int!
 }
 
 type TokenWeight @entity {
@@ -98,34 +110,19 @@ type TokenWeight @entity {
 }
 
 enum EpochState {
-    "active"
-    "transitioning"
-    "expired"
+    active
+    transitioning
+    expired
 }
 
 type System @entity {
     "pricing and constant"
-    """
-    E.g. A new user added authorization worth 1000 tokens / day
-        If he does not have reference code, 
-                            2000           / 1000
-            1. He will get (bonusBaseMulti / bonusDenom) * 1000 gold tickets
-        If he fill in a normal reference code, 
-                            2000           + 1000             
-            1. He will get (bonusBaseMulti + bonusReferMulti) / bonusDenom * 1000 gold tickets
-                                    1000
-            2. His friend will get (bonusReferalMulti / bonusDenom) * 1000 gold tickets
-        If he fill in a VIP reference code,
-                            2000           + 1500
-            1. He will get (bonusBaseMulti + bonusVIPMulti) / bonusDenom * 1000 gold tickets
-                             1000
-            2. VIP will get (bonusReferalMulti / bonusDenom) * 1000 gold tickets
-    """
+    id: ID!
     bonusBaseMulti: Int!
     bonusReferMulti: Int!
     bonusVIPMulti: Int!
     bonusReferalMulti: Int!
     bonusDenom: Int!
 
-    bucketPrice: Float!
+    bucketPrice: BigDecimal!
 }
