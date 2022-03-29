@@ -1,5 +1,5 @@
 import { Bucket,BucketRound,RoundWinner,User,UserRoundTicket } from '../generated/schema'
-import { BigInt, log } from '@graphprotocol/graph-ts'
+import { log } from '@graphprotocol/graph-ts'
 import { AddTickets as E_AddTickets, Raffle as E_Raffle } from '../generated/templates/Bucket/Bucket'
 
 // event AddTickets(address user, uint256 round, uint256 epoch, uint256 amount);
@@ -9,7 +9,10 @@ export function handleAddTickets(event: E_AddTickets): void {
     let bucket = Bucket.load(event.address.toHex())
     let bucketRound = BucketRound.load(event.address.toHex()+event.params.round.toString())
     let user = User.load(event.params.user.toHex())
-    // log.error("wenlufu userRoundId {}", [userRoundId])
+    if (user === null) {
+        user = new User(event.params.user.toHex())
+        user.save()
+    }
     let amount = event.params.amount.toI32()
     bucketRound.tickets += amount
     {
@@ -20,15 +23,17 @@ export function handleAddTickets(event: E_AddTickets): void {
             userRoundTicket.bucketRound = bucketRound.id
             userRoundTicket.amount = 0
 
-            bucketRound.userTickets.push(userRoundTicket.id)
+            bucketRound.userRoundTickets.push(userRoundTicket.id)
             bucketRound.bucket = bucket.id
             bucketRound.round = event.params.round.toI32()
-            // bucketRound.state = BucketState.
         }
+        userRoundTicket.user = user.id
         userRoundTicket.amount += amount
         userRoundTicket.save()
 
-        user.userJoinedRoundList.push("0x16991")
+        let userJoinedRoundList = user.userJoinedRoundList
+        userJoinedRoundList.push(userRoundTicket.id)
+        user.userJoinedRoundList = userJoinedRoundList
         user.save()
     }
     bucketRound.save()
@@ -40,7 +45,7 @@ export function handleRaffle(event: E_Raffle): void {
     let round = BucketRound.load(event.address.toHex()+event.params.round.toString())
     round.raffleTime = event.block.timestamp.toI32()
     round.rnd = event.params.rnd
-    round.state = "done"
+    // round.state = "done"
     //TODO: binary search
     for(let i = 0; i < bucket.whitelistPerRound; i++) {
         let winnerUserId = "xxx"

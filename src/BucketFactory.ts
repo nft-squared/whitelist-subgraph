@@ -13,10 +13,10 @@ export function handleCreate(event: E_Create): void {
     bucket.creator = event.params.creator.toHex()
     bucket.uri = event.params.uri
     bucket.name = "xx"
-    bucket.description = "xxxx"
-    bucket.discord = "xxxxx"
-    bucket.twitter = "xxxxxx"
-    bucket.website = "xxxx"
+    bucket.description = "xxx"
+    bucket.discord = "xxxx"
+    bucket.twitter = "xxxxx"
+    bucket.website = "xxxxxx"
     bucket.whitelistPerRound = event.params.numPerRound.toI32()
     bucket.numRounds = event.params.round.toI32()
     bucket.mintPrice = 0
@@ -33,7 +33,7 @@ export function handleCreate(event: E_Create): void {
         round.state = "pending"
         round.tickets = event.params.numPerRound.toI32()
         round.save()
-        bucket.rounds.push(round.id)
+        // bucket.rounds.push(round.id) no need to add this because Bucketround field in Bucket can be derived
     }
     bucket.save()
     I_Bucket.create(event.params.bucket)

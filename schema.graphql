@@ -3,7 +3,6 @@ type User @entity {
     "user address"
     id: ID!
     referenceCode: String
-    isVIP: Boolean
     authedTokens: [AuthedToken!]
     whitelisted: [RoundWinner!] @derivedFrom(field: "winner")
     userJoinedRoundList: [UserRoundTicket!]
@@ -48,6 +47,7 @@ type UserRoundTicket @entity {
     bucketRound: BucketRound!
     "total number of tickets put into this round"
     amount: Int!
+    user: User!
 }
 
 type BucketRound @entity {
@@ -62,7 +62,7 @@ type BucketRound @entity {
     "time to trigger the raffle"
     raffleTime: Int
     raffleTxHash: Int
-    userTickets: [UserRoundTicket!] @derivedFrom(field: "bucketRound")
+    userRoundTickets: [UserRoundTicket!] @derivedFrom(field: "bucketRound")
     winners: [RoundWinner!] @derivedFrom(field: "round")
 }
 
