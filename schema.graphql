@@ -1,28 +1,28 @@
 "https://thegraph.com/docs/en/developer/create-subgraph-hosted/"
-type Account @entity {
-    "user information"
+type User @entity {
+    "user address"
     id: ID!
-    referenceCode: String!
-    isVIP: Boolean!
-    auths: [Auth!] @derivedFrom(field: "account")
+    referenceCode: String
+    authedTokens: [AuthedToken!]
     whitelisted: [RoundWinner!] @derivedFrom(field: "winner")
+    userJoinedRoundList: [UserRoundTicket!]
 }
 
-type Auth @entity {
-    "user authorized tokens"
+type AuthedToken @entity {
+    "tokenAddr + tokenID"
     id: ID!
-    account: Account!
+    user: User!
     txHash: String!
     tokenAddr: String!
     tokenID: Int!
 }
 
 type Bucket @entity {
-    "bucket"
+    "bucket address"
     id: ID!
     state: BucketState!
     txHash: Bytes!
-    creator: Account!
+    creator: User!
     uri: String!
     name: String!
     description: String!
@@ -41,40 +41,36 @@ type Bucket @entity {
     rounds: [BucketRound!] @derivedFrom(field: "bucket")
 }
 
-type SearchTicket @entity {
-    id: ID!
-    bucketRound: BucketRound!
-    user: Account!
-    accumulateTicktes: Int!
-}
-
 type UserRoundTicket @entity {
+    "user.id + bucketRound.id"
     id: ID!
     bucketRound: BucketRound!
+    "total number of tickets put into this round"
     amount: Int!
+    user: User!
 }
 
 type BucketRound @entity {
-    "bucket rounds"
+    "bucket.id + round"
     id: ID!
     rnd: BigInt
     state: RoundState!
     bucket: Bucket!
     round: Int!
+    "total number of tickets put into this round"
     tickets: Int!
+    "time to trigger the raffle"
     raffleTime: Int
-    searchLength: Int!
-    searchTickets: [SearchTicket!] @derivedFrom(field: "bucketRound")
-    userTickets: [UserRoundTicket!] @derivedFrom(field: "bucketRound")
-    result: [RoundWinner!] @derivedFrom(field: "round")
+    raffleTxHash: Int
+    userRoundTickets: [UserRoundTicket!] @derivedFrom(field: "bucketRound")
+    winners: [RoundWinner!] @derivedFrom(field: "round")
 }
 
 type RoundWinner @entity {
-    "raffle result"
+    "bucketRound.id + user.id + `winner`"
     id: ID!
     round: BucketRound!
-
-    winner: Account!
+    winner: User!
     numberWhitelist: Int!
 }
 
@@ -90,10 +86,9 @@ enum RoundState {
 }
 
 type Epoch @entity {
-    "epoch information, including weights and timestamp"
+    "epoch id"
     id: ID!
-    epoch: Int!
-    state: EpochState
+    state: EpochState!
     weights: [TokenWeight!]! @derivedFrom(field: "epoch")
 
     startTimestamp: Int!
@@ -102,7 +97,7 @@ type Epoch @entity {
 }
 
 type TokenWeight @entity {
-    "token weight for each epoch"
+    "epoch.id + tokenAddress"
     id: ID!
     epoch: Epoch
     tokenAddress: String!
@@ -110,13 +105,14 @@ type TokenWeight @entity {
 }
 
 enum EpochState {
+    inactive
     active
     transitioning
     expired
 }
 
 type System @entity {
-    "pricing and constant"
+    "system id"
     id: ID!
     bonusBaseMulti: Int!
     bonusReferMulti: Int!
