@@ -1,6 +1,7 @@
 import { Bucket,BucketRound,RoundWinner,User,UserRoundTicket } from '../generated/schema'
 import { log } from '@graphprotocol/graph-ts'
 import { AddTickets as E_AddTickets, Raffle as E_Raffle } from '../generated/templates/Bucket/Bucket'
+import { Bucket as BucketSmartContract} from '../generated/templates/Bucket/Bucket'
 
 // event AddTickets(address user, uint256 round, uint256 epoch, uint256 amount);
 // event Raffle(address operator, uint256 round, uint256 rnd);
@@ -27,7 +28,7 @@ export function handleAddTickets(event: E_AddTickets): void {
             bucketRound.bucket = bucket.id
             bucketRound.round = event.params.round.toI32()
         }
-        userRoundTicket.user = user.id
+        // userRoundTicket.user = user.id // no need for this line because it was derived
         userRoundTicket.amount += amount
         userRoundTicket.save()
 
@@ -37,24 +38,32 @@ export function handleAddTickets(event: E_AddTickets): void {
         user.save()
     }
     bucketRound.save()
-    log.info("wenlufu handleAddTickets:{} {}", [event.params.user.toHex(), event.params.amount.toString()])
+    log.info("handleAddTickets:{} {}", [event.params.user.toHex(), event.params.amount.toString()])
 }
 
 export function handleRaffle(event: E_Raffle): void {
-    let bucket = Bucket.load(event.address.toHex())
-    let round = BucketRound.load(event.address.toHex()+event.params.round.toString())
-    round.raffleTime = event.block.timestamp.toI32()
-    round.rnd = event.params.rnd
-    // round.state = "done"
-    //TODO: binary search
-    for(let i = 0; i < bucket.whitelistPerRound; i++) {
-        let winnerUserId = "xxx"
-        let winner = new RoundWinner(round.id+winnerUserId) // how do we get user id
-        winner.round = round.id
-        winner.numberWhitelist = i;
-        winner.save()
-        round.winners.push(winner.id)
+    let bucketRound = BucketRound.load(event.address.toHex()+event.params.round.toString())
+    bucketRound.raffleTime = event.block.timestamp.toI32()
+    bucketRound.rnd = event.params.rnd
+
+    let contract = BucketSmartContract.bind(event.address)
+    let winners = contract.whitelist(event.params.round)
+
+    // bucketRound.state = "done"
+    for(let i = 0; i < 1; i++) {
+        let winnerUserId = winners[i].toHex()
+        let roundWinner = RoundWinner.load(bucketRound.id+winnerUserId)
+        if (roundWinner === null) {
+            roundWinner = new RoundWinner(bucketRound.id+winnerUserId)
+            roundWinner.numberWhitelist = 0
+            roundWinner.save()
+        }
+        roundWinner.round = bucketRound.id
+        roundWinner.numberWhitelist += 1;
+        roundWinner.winner = winnerUserId
+        roundWinner.save()
+        bucketRound.save()
     }
-    round.save()
-    log.info("handleRaffle:{}",[event.params.rnd.toHex()])
+    bucketRound.save()
+    log.info("wenluhandleRaffle:{}",[event.params.rnd.toHex()])
 }
