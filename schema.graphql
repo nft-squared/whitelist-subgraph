@@ -4,8 +4,8 @@ type User @entity {
     id: ID!
     referenceCode: String
     authedTokens: [AuthedToken!]
-    whitelisted: [RoundWinner!] @derivedFrom(field: "winner")
-    userJoinedRoundList: [UserRoundTicket!]
+    whitelisted: [Bucket!] @derivedFrom(field: "winners")
+    userJoinedBucketList: [UserBucketTicket!] @derivedFrom(field: "user")
 }
 
 type AuthedToken @entity {
@@ -20,80 +20,49 @@ type AuthedToken @entity {
 type Bucket @entity {
     "bucket address"
     id: ID!
-    state: BucketState!
-    txHash: Bytes!
-    creator: User!
-    uri: String!
-    name: String!
-    description: String!
-    discord: String!
-    twitter: String!
-    website: String!
-    whitelistPerRound: Int!
-    numRounds: Int!
-    mintPrice: Int!
-    mintToken: String!
-    blockchain: String!
-    launchDate: Int!
+    state: String
+    txHash: Bytes
+    creator: String
+    uri: String
+    name: String
+    description: String
+    discord: String
+    twitter: String
+    website: String
+    whitelistAmount: Int
+    mintPrice: Int
+    mintToken: String
+    blockchain: String
+    launchDate: Int
     referral: String
+    createTime: Int
+    raffleTime: Int
+    startEpoch: String
+    endEpoch: String
+    rnd: BigInt
 
-    createTime: Int!
-    rounds: [BucketRound!] @derivedFrom(field: "bucket")
+    ticketsAmountInBucket: Int
+    winners: [User!]
 }
 
-type UserRoundTicket @entity {
-    "user.id + bucketRound.id"
+type UserBucketTicket @entity {
+    "user.id + bucket.id"
     id: ID!
-    bucketRound: BucketRound!
+    bucket: Bucket!
     "total number of tickets put into this round"
     amount: Int!
     user: User!
 }
 
-type BucketRound @entity {
-    "bucket.id + round"
-    id: ID!
-    rnd: BigInt
-    state: RoundState!
-    bucket: Bucket!
-    round: Int!
-    "total number of tickets put into this round"
-    tickets: Int!
-    "time to trigger the raffle"
-    raffleTime: Int
-    raffleTxHash: Int
-    userRoundTickets: [UserRoundTicket!] @derivedFrom(field: "bucketRound")
-    winners: [RoundWinner!] @derivedFrom(field: "round")
-}
-
-type RoundWinner @entity {
-    "bucketRound.id + user.id + `winner`"
-    id: ID!
-    round: BucketRound!
-    winner: User!
-    numberWhitelist: Int!
-}
-
-enum BucketState {
-    pending
-    active
-    closed
-}
-
-enum RoundState {
-    pending
-    done
-}
-
 type Epoch @entity {
     "epoch id"
     id: ID!
-    state: EpochState!
-    weights: [TokenWeight!]! @derivedFrom(field: "epoch")
+    state: EpochState
+    weights: [TokenWeight!] @derivedFrom(field: "epoch")
 
-    startTimestamp: Int!
-    nextEpoch: Int!
-    nextTimestamp: Int!
+    startTimestamp: Int
+    nextEpoch: Int
+    nextTimestamp: Int
 }
 
 type TokenWeight @entity {
@@ -103,6 +72,13 @@ type TokenWeight @entity {
     tokenAddress: String!
     weight: Int!
 }
+
+enum BucketState {
+    pending
+    active
+    closed
+}
+
 
 enum EpochState {
     inactive

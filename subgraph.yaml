@@ -61,10 +61,10 @@ templates:
         - name: Bucket
           file: ./abis/Bucket.sol/Bucket.json
       eventHandlers:
-        - event: AddTickets(address,uint256,uint256,uint256)
-          handler: handleAddTickets
         - event: Raffle(address,uint256,uint256)
           handler: handleRaffle
+        - event: AddTickets(address,uint256,uint256,uint256)
+          handler: handleAddTickets
   - name: AuthPool
     kind: ethereum/contract
     network: mainnet

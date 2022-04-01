@@ -1,12 +1,11 @@
-import { Bucket,BucketRound,RoundWinner,UserRoundTicket, AuthedToken, User } from '../generated/schema'
-import { BigInt, log } from '@graphprotocol/graph-ts'
+import { Bucket,UserBucketTicket, AuthedToken, User } from '../generated/schema'
+import { log } from '@graphprotocol/graph-ts'
 import { AddAuth as E_AddAuth, DelAuth as E_DelAuth } from '../generated/templates/AuthPool/AuthPool'
 
 export function handleAddAuth(event: E_AddAuth): void {
     let user = User.load(event.params.tokenOwner.toHex())
     if (user === null) {
         user = new User(event.params.tokenOwner.toHex())
-        user.userJoinedRoundList = []
         user.authedTokens = []
         user.save()
     }
