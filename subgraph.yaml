@@ -8,7 +8,7 @@ dataSources:
     name: ElitePad
     network: mainnet
     source:
-      address: "0x696057ACe1A35886CDba85aEdc7B6e5e5C54fB7f"
+      address: "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c"
       abi: ElitePad
       startBlock: 0
     mapping:
@@ -61,10 +61,10 @@ templates:
         - name: Bucket
           file: ./abis/Bucket.sol/Bucket.json
       eventHandlers:
-        - event: Raffle(address,uint256,uint256)
-          handler: handleRaffle
         - event: AddTickets(address,uint256,uint256,uint256)
           handler: handleAddTickets
+        - event: Raffle(address,uint256,uint256)
+          handler: handleRaffle
   - name: AuthPool
     kind: ethereum/contract
     network: mainnet
@@ -87,3 +87,24 @@ templates:
           handler: handleAddAuth
         - event: DelAuth(address,uint256[])
           handler: handleDelAuth
+  - name: Weights
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: Weights
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/Weights.ts
+      entities:
+        - TokenWeight
+      abis:
+        - name: Weights
+          file: ./abis/Weights.sol/Weights.json
+        - name: ElitePad
+          file: ./abis/ElitePad.sol/ElitePad.json
+      eventHandlers:
+        - event: UpdateWeights(uint256,uint256,address[],uint256[])
+          handler: handleUpdateWeights
+
