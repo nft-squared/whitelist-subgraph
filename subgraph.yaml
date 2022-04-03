@@ -19,6 +19,7 @@ dataSources:
       entities:
         - System
         - User
+        - Epoch
       abis:
         - name: ElitePad
           file: ./abis/ElitePad.sol/ElitePad.json

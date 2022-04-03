@@ -55,10 +55,9 @@ type UserBucketTicket @entity {
 }
 
 type Epoch @entity {
-    "epoch id"
+    "epoch id, 0 when ElitePad is deployed"
     id: ID!
     state: EpochState
-    weights: [TokenWeight!] @derivedFrom(field: "epoch")
 
     startTimestamp: Int
     nextEpoch: Int
@@ -66,9 +65,9 @@ type Epoch @entity {
 }
 
 type TokenWeight @entity {
-    "epoch.id + tokenAddress"
+    "epochId + tokenAddress"
     id: ID!
-    epoch: Epoch
+    epoch: Int
     tokenAddress: String!
     weight: Int!
 }

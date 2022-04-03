@@ -10,7 +10,8 @@
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ElitePad",
     "create-local": "graph create --node http://localhost:8020/ ElitePad",
     "remove-local": "graph remove --node http://localhost:8020/ ElitePad",
-    "deploy-local": "graph deploy --debug --node http://localhost:8020/ --ipfs http://localhost:5001 ElitePad"
+    "deploy-local": "graph deploy --debug --node http://localhost:8020/ --ipfs http://localhost:5001 ElitePad",
+    "deploy-ec2": "graph deploy --node http://ec2-54-153-63-160.us-west-1.compute.amazonaws.com:8020/ --ipfs http://ec2-54-153-63-160.us-west-1.compute.amazonaws.com:5001 ElitePad"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.20.1",
