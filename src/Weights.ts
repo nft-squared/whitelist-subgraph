@@ -4,17 +4,17 @@ import { UpdateWeights as E_UpdateWeights } from '../generated/templates/Weights
 
 // event UpdateWeights(uint256 optEpoch, uint256 epoch, address[] tokens, uint256[] weights);
 export function handleUpdateWeights(event: E_UpdateWeights): void {
-    let epochId = event.params.epoch.toHex()
+    let epochId = event.params.epoch
     let tokens = event.params.tokens
     let weights = event.params.weights
     for (let i = 0; i < tokens.length; i++) {
         let tokenAddress = tokens[i].toHex()
-        let tokenWeightId = epochId + tokenAddress
+        let tokenWeightId = epochId.toString() + tokenAddress
         let tokenWeight = TokenWeight.load(tokenWeightId)
         if (tokenWeight === null) {
             tokenWeight = new TokenWeight(tokenWeightId)
         }
-        tokenWeight.epoch = epochId
+        tokenWeight.epoch = epochId.toI32()
         tokenWeight.tokenAddress = tokenAddress
         tokenWeight.weight = weights[i].toI32()
         tokenWeight.save()
