@@ -27,7 +27,7 @@ export function handleCreate(event: E_Create): void {
     bucket.launchDate = 0
     bucket.createTime = event.block.timestamp.toI32()
     bucket.startEpoch = event.params.startEpoch.toString()
-    bucket.endEpoch = "10"
+    bucket.endEpoch = event.params.endEpoch.toString()
     bucket.ticketsAmountInBucket = 0
     bucket.winners = []
 
