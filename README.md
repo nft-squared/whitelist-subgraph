@@ -34,7 +34,7 @@ docker-compose up
 1. cloen this repo
 2. install: `yarn` or `npm install`
 3. edit `subgraph.yaml`, change `/dataSources/0/source/address` to ElitePad contract address in 1.4
-4. generate ts-script from contracts abis: `yarn codegen`
+4. generate ts-class script from contracts-abis and schema.graphql: `yarn codegen`
 5. compile ts-script to wasm: `yarn build`
 6. create a Subgrpah on Thegraph node: `yarn create-local`
 7. deploy wasm to the subgraph in 3.6: `yarn deploy-local`

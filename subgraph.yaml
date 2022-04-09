@@ -8,12 +8,12 @@ dataSources:
     name: ElitePad
     network: mainnet
     source:
-      address: "0x005a05A148A8749be8a04e4C680d7c8Ac24a07dD"
+      address: "0x9D04dA293C9291898eFe5da57b74dc7E9F9642c4"
       abi: ElitePad
-      startBlock: 0
+      startBlock: 23734321
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/ElitePad.ts
       entities:
@@ -35,7 +35,7 @@ templates:
       abi: BucketFactory
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/BucketFactory.ts
       entities:
@@ -53,7 +53,7 @@ templates:
       abi: Bucket
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/Bucket.ts
       entities:
@@ -73,9 +73,9 @@ templates:
       abi: AuthPool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/User.ts
+      file: ./src/Auth.ts
       entities:
         - User
       abis:
@@ -95,7 +95,7 @@ templates:
       abi: Weights
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/Weights.ts
       entities:
