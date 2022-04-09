@@ -2,7 +2,8 @@
   "name": "ElitePad",
   "license": "UNLICENSED",
   "scripts": {
-    "all": "yarn codegen && yarn build && yarn create-local && yarn deploy-local",
+    "all": "yarn codegen && yarn build && yarn remove-local && yarn create-local && yarn deploy-local",
+    "all-ec2": "yarn codegen && yarn build && yarn remove-ec2 && yarn create-ec2 && yarn deploy-ec2",
     "local": "yarn codegen && yarn build-local && yarn create-local && yarn deploy-local",
     "codegen": "graph codegen",
     "build": "graph build",
@@ -10,11 +11,13 @@
     "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ElitePad",
     "create-local": "graph create --node http://localhost:8020/ ElitePad",
     "remove-local": "graph remove --node http://localhost:8020/ ElitePad",
-    "deploy-local": "graph deploy --debug --node http://localhost:8020/ --ipfs http://localhost:5001 ElitePad",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ElitePad -l v0.0.1",
+    "create-ec2": "graph create --node http://ec2-54-153-63-160.us-west-1.compute.amazonaws.com:8020/ ElitePad",
+    "remove-ec2": "graph remove --node http://ec2-54-153-63-160.us-west-1.compute.amazonaws.com:8020/ ElitePad",
     "deploy-ec2": "graph deploy --node http://ec2-54-153-63-160.us-west-1.compute.amazonaws.com:8020/ --ipfs http://ec2-54-153-63-160.us-west-1.compute.amazonaws.com:5001 ElitePad"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.20.1",
-    "@graphprotocol/graph-ts": "0.20.0"
+    "@graphprotocol/graph-cli": "^0.29.0",
+    "@graphprotocol/graph-ts": "^0.26.0"
   }
 }

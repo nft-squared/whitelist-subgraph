@@ -3,18 +3,42 @@ type User @entity {
     "user address"
     id: ID!
     referenceCode: String
-    authedTokens: [AuthedToken!]
-    whitelisted: [Bucket!] @derivedFrom(field: "winners")
-    userJoinedBucketList: [UserBucketTicket!] @derivedFrom(field: "user")
+    authedTokens: [AuthedTokenId!]! @derivedFrom(field: "user")
+    whitelisted: [BucketWinner!]! @derivedFrom(field: "user")
+    userJoinedBucketList: [UserBucketTicket!]! @derivedFrom(field: "user")
 }
 
 type AuthedToken @entity {
+    "token address"
+    id: ID!
+    weight: Int!
+    tokens: [AuthedTokenId!]! @derivedFrom(field: "token")
+    weights: [TokenWeight!]! @derivedFrom(field: "token")
+}
+
+type AuthedTokenId @entity {
     "tokenAddr + tokenID"
     id: ID!
-    user: User!
+    user: User
     txHash: String!
-    tokenAddr: String!
+    token: AuthedToken!
     tokenID: Int!
+}
+
+type SearchTicket @entity {
+    "Bucket.id + index"
+    id: ID!
+    bucket: Bucket!
+    user: Bytes!
+    accumulateTicktes: Int!
+}
+
+type BucketWinner @entity {
+    "bucket.id + user.id"
+    id: ID!
+    user: User!
+    bucket: Bucket!
+    indexes: [Int]!
 }
 
 type Bucket @entity {
@@ -37,12 +61,14 @@ type Bucket @entity {
     referral: String
     createTime: Int
     raffleTime: Int
-    startEpoch: String
-    endEpoch: String
+    startEpoch: Int
+    endEpoch: Int
     rnd: BigInt
 
     ticketsAmountInBucket: Int
-    winners: [User!]
+    winners: [BucketWinner!] @derivedFrom(field: "bucket")
+    searchLength: Int!
+    searchTickets: [SearchTicket!]! @derivedFrom(field: "bucket")
 }
 
 type UserBucketTicket @entity {
@@ -68,7 +94,7 @@ type TokenWeight @entity {
     "epochId + tokenAddress"
     id: ID!
     epoch: Int
-    tokenAddress: String!
+    token: AuthedToken!
     weight: Int!
 }
 

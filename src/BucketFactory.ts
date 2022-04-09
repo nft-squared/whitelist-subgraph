@@ -26,11 +26,9 @@ export function handleCreate(event: E_Create): void {
     bucket.blockchain = "ethereum"
     bucket.launchDate = 0
     bucket.createTime = event.block.timestamp.toI32()
-    bucket.startEpoch = event.params.startEpoch.toString()
-    bucket.endEpoch = event.params.endEpoch.toString()
+    bucket.startEpoch = event.params.startEpoch.toI32()
+    bucket.endEpoch = event.params.endEpoch.toI32()
     bucket.ticketsAmountInBucket = 0
-    bucket.winners = []
-
 
     bucket.save()
 
