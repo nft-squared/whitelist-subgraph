@@ -67,6 +67,8 @@ type Bucket @entity {
 
     ticketsAmountInBucket: Int
     winners: [BucketWinner!] @derivedFrom(field: "bucket")
+
+    userTickets: [UserBucketTicket!]! @derivedFrom(field: "bucket")
     searchLength: Int!
     searchTickets: [SearchTicket!]! @derivedFrom(field: "bucket")
 }

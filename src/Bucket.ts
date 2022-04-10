@@ -93,13 +93,12 @@ export function handleAddTickets(event: E_AddTickets): void {
         let userBucketTicket = UserBucketTicket.load(user.id)
         if(!userBucketTicket) {
             userBucketTicket = new UserBucketTicket(user.id + bucket.id)
+            userBucketTicket.bucket = bucket.id
+            userBucketTicket.user = user.id
             userBucketTicket.amount = 0
         }
-        userBucketTicket.bucket = bucket.id
-        userBucketTicket.user = user.id
         userBucketTicket.amount += amount
         userBucketTicket.save()
-
         user.save()
     }
     addSearchTicket(bucket, event.params.user, amount)
