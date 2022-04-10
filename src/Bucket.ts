@@ -52,6 +52,7 @@ function binarySearch(bucket: Bucket, target: i32, gt: (bucket: Bucket, target: 
 
 function winners(bucket: Bucket):Address[] {
     let _winners = [] as Address[];
+    if(bucket.searchLength == 0) return _winners;
     for(let i = 0; i < bucket.whitelistAmount; i++) {
         let tickets = rndI(bucket.rnd!, i).mod(BigInt.fromI32(bucket.ticketsAmountInBucket)).toI32()
         let find = binarySearch(bucket, tickets, (bucket: Bucket, target: i32, p:i32):boolean=>{
