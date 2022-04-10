@@ -103,6 +103,7 @@ export function handleAddTickets(event: E_AddTickets): void {
         user.save()
     }
     addSearchTicket(bucket, event.params.user, amount)
+    bucket.save()
     log.info("handleAddTickets:{} {}", [event.params.user.toHex(), event.params.amount.toString()])
 }
 
