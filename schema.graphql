@@ -3,7 +3,7 @@ type User @entity {
     "user address"
     id: ID!
     referenceCode: String
-    authedTokens: [AuthedTokenId!]! @derivedFrom(field: "user")
+    authedTokenIDs: [AuthedTokenId!]! @derivedFrom(field: "user")
     whitelisted: [BucketWinner!]! @derivedFrom(field: "user")
     userJoinedBucketList: [UserBucketTicket!]! @derivedFrom(field: "user")
 }
@@ -12,7 +12,7 @@ type AuthedToken @entity {
     "token address"
     id: ID!
     weight: Int!
-    tokens: [AuthedTokenId!]! @derivedFrom(field: "token")
+    tokenIDs: [AuthedTokenId!]! @derivedFrom(field: "token")
     weights: [TokenWeight!]! @derivedFrom(field: "token")
 }
 
